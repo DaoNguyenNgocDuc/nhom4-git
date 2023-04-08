@@ -1,0 +1,6 @@
+[submodule "back-end"]
+	path = back-end
+	url = https://github.com/DaoNguyenNgocDuc/back-end.git
+[submodule "chat-app"]
+	path = chat-app
+	url = https://github.com/Buivanthanhdat10022001/chat-app.git
