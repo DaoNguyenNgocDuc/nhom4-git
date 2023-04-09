@@ -1,0 +1,79 @@
+const { register } = require("../controllers/userController");
+const User = require("../models/userModel");
+jest.mock('../models/userModel');
+
+
+describe('register', () => {
+
+    test('Return Username already used', async () => {
+        const req = {
+            body: {
+                username: 'usernamealready',
+                email: 'test@gmail.com',
+                password: 'testpassword',
+                cofirmpassword: 'testpassword',
+
+            },
+        };
+        User.findOne.mockImplementationOnce(() => ({
+                username: 'usernamealready',
+                email: '',
+                password: '',
+                cofirmpassword: '',
+        }));
+        const res = {
+            json: jest.fn(),
+        };
+        await register(req, res);
+        expect(res.json).toHaveBeenCalledWith({
+            msg: 'Username already used',
+            status: false,
+        });
+    });
+    test('Return Email already used', async () => {
+        const req = {
+            body: {
+                username: 'usernamenew',
+                email: 'test@gmail.com',
+                password: 'testpassword',
+                cofirmpassword: 'testpassword',
+
+            },
+        };
+        User.findOne.mockImplementationOnce(() => ({
+                username: '',
+                email: 'test@gmail.com',
+                password: '',
+                cofirmpassword: '',
+        }));
+        const res = {
+            json: jest.fn(),
+        };
+        await register(req, res);
+        expect(res.json).toHaveBeenCalledWith({
+            msg: 'Email already used',
+            status: false,
+        });
+    });
+
+    
+
+    test('redirect to chat page and register successfully', async () => {
+        const req = {
+            body: {
+                username: 'usernamealready',
+                email: 'test@gmail.com',
+                password: 'testpassword',
+                cofirmpassword: 'testpassword',
+            },
+        };
+        const res = {
+            json: jest.fn(),
+        };
+        await register(req, res);
+        expect(res.json).toHaveBeenCalledWith({
+            status: true,
+            user: expect.any(Object),
+        });
+    });
+});
